@@ -1,6 +1,3 @@
-import lombok.*;
-
-@Data
 public class RegistrationInfo {
     String login;
     String password;
