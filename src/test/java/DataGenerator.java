@@ -20,12 +20,11 @@ class DataGenerator {
             .log(LogDetail.ALL)
             .build();
 
-    @BeforeAll
-    static void setUpAll() {
+    public static void sendRequest(RegistrationInfo user) {
         // сам запрос
         given() // "дано"
                 .spec(requestSpec) // указываем, какую спецификацию используем
-                .body(new RegistrationDto("vasya", "password", "active")) // передаём в теле объект, который будет преобразован в JSON
+                .body(new Gson().toJson(user)) // передаём в теле объект, который будет преобразован в JSON
                 .when() // "когда"
                 .post("/api/system/users") // на какой путь, относительно BaseUri отправляем запрос
                 .then() // "тогда ожидаем"
@@ -34,18 +33,33 @@ class DataGenerator {
 
     static Faker faker = new Faker(new Locale("en"));
 
-    public static String generatelogin() {
+    private DataGenerator() {
+    }
+
+    public static String getRandomLogin() {
         String login = faker.name().firstName();
         return login;
     }
 
-    public static String generatePass() {
+    public static String getRandomPassword() {
         String password = faker.internet().password();
         return password;
     }
 
-    public static RegistrationInfo generateUser () {
-        RegistrationInfo user = new RegistrationInfo(generatelogin(), generatePass(), "active");
+    public static class Registration {
+        private Registration() {
+        }
+    }
+
+    public static RegistrationInfo getUser(String status) {
+        RegistrationInfo user = new RegistrationInfo(getRandomLogin(), getRandomPassword(), status);
         return user;
     }
+
+    public static RegistrationInfo getRegisteredUser(String status) {
+        RegistrationInfo registeredUser = getUser(status);
+        sendRequest(registeredUser);
+        return registeredUser;
+    }
+
 }
