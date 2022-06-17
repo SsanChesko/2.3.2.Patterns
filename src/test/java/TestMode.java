@@ -43,11 +43,11 @@ public class TestMode {
     @Test
     @DisplayName("Should get error message if login with blocked registered user")
     void shouldGetErrorIfBlockedUser() {
-        var blockedUser = DataGenerator.getUser("blocked");
+        var blockedUser = DataGenerator.getRegisteredUser("blocked");
         $("[data-test-id='login'] input").val(blockedUser.getLogin());
         $("[data-test-id='password'] input").val(blockedUser.getPassword());
         $(withText("Продолжить")).click();
-        $(".notification__content").shouldHave(Condition.text("Неверно указан логин или пароль"), Duration.ofSeconds(20));
+        $(".notification__content").shouldHave(Condition.text("Пользователь заблокирован"), Duration.ofSeconds(20));
     }
 
     @Test
